@@ -1,0 +1,53 @@
+.menuContainer {
+    position: relative;
+    display: inline-block;
+}
+
+.menuButton {
+    background-color: transparent;
+    color: white;
+    border: none;
+    padding: 0;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    outline: none;
+}
+
+.menuButton:hover {
+    color: #ddd;
+}
+
+.menuList {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    background-color: #333;
+    /* темний фон, як у хедера */
+    border: 1px solid #555;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    padding: 4px 0;
+    margin: 0;
+    list-style: none;
+    min-width: 160px;
+    z-index: 1000;
+}
+
+.menuItem {
+    margin: 0;
+}
+
+.menuLink {
+    display: block;
+    padding: 8px 16px;
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.menuLink:hover {
+    background-color: #555;
+    color: white;
+}
