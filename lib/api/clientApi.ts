@@ -10,20 +10,19 @@ export interface FetchNotesParams {
 }
 
 export async function getNotes(
-  query: string,
-  page: number,
-  tag: NoteTag
+  query: string = '',
+  page: number = 1,
+  perPage: number,
+  tag?: NoteTag
 ): Promise<NotesApiResponse> {
   const params: FetchNotesParams = {
-    ...(query.trim() !== "" && { search: query.trim() }),
-    page: page,
+    ...(query.trim() !== '' && { search: query.trim() }),
+    page,
     perPage: 12,
-    tag,
+    ...(tag && { tag }),
   };
 
-  const response = await nextServer.get<NotesApiResponse>("/notes", {
-    params,
-  });
+  const response = await nextServer.get<NotesApiResponse>('/notes', { params });
   return response.data;
 }
 
