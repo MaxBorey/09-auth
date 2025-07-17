@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link'; // додано для посилання
+import Link from 'next/link';
 import css from './Notes.module.css';
 import NoteList from '../../../../components/NoteList/NoteList';
 import Pagination from '../../../../components/Pagination/Pagination';
@@ -17,7 +17,6 @@ interface NotesClientProps {
   initialTotalPages: number;
   initialPage: number;
   initialSearch: string;
-  initialTotal: number;
   tag?: NoteTag;
 }
 
@@ -26,7 +25,6 @@ export default function NotesClient({
   initialTotalPages,
   initialPage,
   initialSearch,
-  initialTotal,
   tag: initialTag,
 }: NotesClientProps) {
   const [page, setPage] = useState(initialPage);
@@ -38,8 +36,7 @@ export default function NotesClient({
     !Array.isArray(initialNotes) ||
     typeof initialTotalPages !== 'number' ||
     typeof initialPage !== 'number' ||
-    typeof initialSearch !== 'string' ||
-    typeof initialTotal !== 'number';
+    typeof initialSearch !== 'string';
 
   const { data, isLoading, isError, error, isSuccess } = useQuery<NotesApiResponse, Error>({
     queryKey: ['notes', debouncedSearchTerm, page, tag],
@@ -50,9 +47,6 @@ export default function NotesClient({
       tag === initialTag
         ? {
             notes: initialNotes,
-            page: initialPage,
-            perPage: 12,
-            total: initialTotal,
             totalPages: initialTotalPages,
           }
         : undefined,
