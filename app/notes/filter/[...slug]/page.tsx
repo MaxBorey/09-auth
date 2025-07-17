@@ -1,4 +1,4 @@
-import { getNotes } from '@/lib/api';
+import { getNotes } from '@/lib/api/clientApi';
 import NotesClient from './Notes.client';
 import { NoteTag } from '@/types/note';
 import type { Metadata } from 'next'
