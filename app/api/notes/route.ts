@@ -20,6 +20,8 @@ export async function GET(request: NextRequest) {
       Cookie: cookieStore.toString(),
     },
   });
+
+
   if (data) {
     return NextResponse.json(data);
   }
