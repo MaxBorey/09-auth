@@ -1,44 +1,69 @@
-import type { User } from '../../types/user'
-import { nextServer } from './api';
+import { nextServer } from "./api";
+import { cookies } from "next/headers";
+import { ApiResponse, FetchNotesParams, Params, User } from "./clientApi";
+import { Note } from "@/types/note";
 
-export type RegisterRequest = {
-  email: string;
-  password: string;
-  userName: string;
+export const fetchServerNotes = async ({
+  page = 1,
+  searchQuery,
+  perPage = 12,
+  tag,
+}: FetchNotesParams): Promise<ApiResponse> => {
+  const trimmedSearch = searchQuery?.trim();
+  const trimmedTag = tag?.trim();
+
+  const params: Params = {
+    page,
+    perPage,
+    ...(trimmedSearch && { search: trimmedSearch }),
+    ...(trimmedTag && { tag: trimmedTag }),
+  };
+
+  try {
+    const cookieStore = await cookies();
+    const response = await nextServer.get<ApiResponse>(`/notes`, {
+      params,
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch notes:", error);
+    throw error;
+  }
 };
 
-export const register = async (data: RegisterRequest) => {
-  const res = await nextServer.post<User>('/auth/register', data);
-  return res.data;
+export const fetchServerNoteById = async (id: string): Promise<Note> => {
+  try {
+    const cookieStore = await cookies();
+    const response = await nextServer.get<Note>(`/notes/${id}`, {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Failed to fetch note with id ${id}:`, error);
+    throw error;
+  }
 };
 
-export type LoginRequest = {
-  email: string;
-  password: string;
-};
-
-export const login = async (data: LoginRequest) => {
-  const res = await nextServer.post<User>('/auth/login', data);
-  return res.data;
-};
-
-type CheckSessionRequest = {
-  success: boolean;
-};
-
-export const checkSession = async () => {
-  const res = await nextServer.get<CheckSessionRequest>('/auth/session');
-  return res.data.success;
-};
-
-export const getMe = async () => {
-  const { data } = await nextServer.get<User>('/auth/me');
+export const getServerMe = async () => {
+  console.log("getServerMe called");
+  const cookieData = await cookies();
+  const { data } = await nextServer<User>(`/users/me`, {
+    headers: { Cookie: cookieData.toString() },
+  });
   return data;
 };
 
-export async function logout() {
-  const response = await nextServer.post('/auth/logout', null, {
-    withCredentials: true,
+export const checkServerSession = async () => {
+  const cookieStore = await cookies();
+  const res = await nextServer.get("/auth/session", {
+    headers: {
+      Cookie: cookieStore.toString(),
+    },
   });
-  return response.data;
-}
+  return res;
+};

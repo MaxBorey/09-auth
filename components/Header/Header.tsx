@@ -1,32 +1,23 @@
-import TagsMenu from '../TagsMenu/TagsMenu';
-import css from './Header.module.css';
-import Link from 'next/link';
+import Link from "next/link";
+import css from "./Header.module.css";
+import TagsMenu from "../TagsMenu/TagsMenu";
+import AuthNavigation from "../AuthNavigation/AuthNavigation";
 
-  
-
-const Header = async () => {
-  const tags = ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
-
-
+const Header = () => {
   return (
     <header className={css.header}>
-      <Link href="/" aria-label="Home" className={css.logo}>
-        <span className={css.logoNote}>Notehub</span>
+      <Link href="/" aria-label="Home">
+        NoteHub
       </Link>
-      <nav aria-label="Main Navigation" role="navigation">
+      <nav aria-label="Main Navigation">
         <ul className={css.navigation}>
           <li>
             <Link href="/">Home</Link>
           </li>
           <li>
-            <TagsMenu tags={tags} />
+            <TagsMenu />
           </li>
-          <li>
-            <Link href="/sign-in">Login</Link>
-          </li>
-          <li>
-            <Link href="/sign-up">Register</Link>
-          </li>
+          <AuthNavigation />
         </ul>
       </nav>
     </header>

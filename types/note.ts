@@ -1,23 +1,15 @@
+export type TagName = "Work" | "Personal" | "Meeting" | "Shopping" | "Todo";
 export interface Note {
-  id: string;         
+  id: string;
   title: string;
   content: string;
-  tag: NoteTag;
   createdAt: string;
   updatedAt: string;
-  userId?: string;   
+  tag: TagName;
 }
 
-export interface ErrorProps {
-  error: Error;
-  reset: () => void;
-};
-
-export interface NotesApiResponse {
-  notes: Note[];
-  totalPages: number;
+export interface NoteFormValues {
+  title: string;
+  content: string;
+  tag: TagName;
 }
-
-export type NoteTag = 'Work' | 'Personal' | 'Meeting' | 'Shopping' | 'Todo';
-
-

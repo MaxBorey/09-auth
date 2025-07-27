@@ -1,23 +1,38 @@
-'use client';
+"use client";
+import { useRouter } from "next/navigation";
+import css from "./NoteForm.module.css";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createNote } from "@/lib/api/clientApi";
+import toast from "react-hot-toast";
+import { NoteFormValues, TagName } from "@/types/note";
+import { useNoteDraftStore } from "@/lib/store/noteStore";
 
-import { createNote, NewNoteData } from '@/lib/api';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { useNoteDraftStore } from '@/lib/store/noteStore';
-import css from './NoteForm.module.css';
-
-type Props = {
-  tags: string[];
-};
-
-const NoteForm = ({ tags }: Props) => {
+export interface NoteFormProps {
+  onClose: () => void;
+}
+export default function NoteForm() {
   const router = useRouter();
   const queryClient = useQueryClient();
-
   const { draft, setDraft, clearDraft } = useNoteDraftStore();
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  const mutation = useMutation({
+    mutationFn: createNote,
+    onSuccess: () => {
+      toast.success("New note created successfully");
+      queryClient.invalidateQueries({ queryKey: ["notes"] });
+      router.push("/notes/filter/all");
+      clearDraft();
+    },
+    onError: (error) => {
+      console.error("Failed to create note:", error);
+      toast.error("Failed to create note");
+    },
+  });
+
+  const handlechange = (
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     setDraft({
       ...draft,
@@ -25,37 +40,28 @@ const NoteForm = ({ tags }: Props) => {
     });
   };
 
-  const { mutate } = useMutation({
-    mutationFn: createNote,
-    onSuccess: () => {
-      clearDraft();
-      queryClient.refetchQueries({ queryKey: ['notes'] });
-      router.push('/notes/filter/all');
-    },
-  });
+  const handleCancel = () => router.push("/notes/filter/all");
 
   const handleSubmit = (formData: FormData) => {
-    const values = Object.fromEntries(formData) as NewNoteData;
-    mutate(values);
+    const values: NoteFormValues = {
+      title: formData.get("title") as string,
+      content: formData.get("content") as string,
+      tag: formData.get("tag") as TagName,
+    };
+    mutation.mutate(values);
   };
 
-  const handleCancel = () => router.push('/notes/filter/all');
-
   return (
-    <form className={css.form} action={handleSubmit}>
+    <form action={handleSubmit} className={css.form}>
       <div className={css.formGroup}>
         <label htmlFor="title">Title</label>
         <input
           id="title"
-          className={css.input}
           type="text"
           name="title"
           defaultValue={draft?.title}
-          onChange={handleChange}
-          required
-          placeholder="Enter the note title"
-          onInvalid={e => e.currentTarget.setCustomValidity('Please enter the note title')}
-          onInput={e => e.currentTarget.setCustomValidity('')}
+          onChange={handlechange}
+          className={css.input}
         />
       </div>
 
@@ -63,14 +69,10 @@ const NoteForm = ({ tags }: Props) => {
         <label htmlFor="content">Content</label>
         <textarea
           id="content"
-          className={css.textarea}
           name="content"
           defaultValue={draft?.content}
-          onChange={handleChange}
-          required
-          placeholder="Enter the text of note"
-          onInvalid={e => e.currentTarget.setCustomValidity('Please enter the text')}
-          onInput={e => e.currentTarget.setCustomValidity('')}
+          onChange={handlechange}
+          className={css.textarea}
         />
       </div>
 
@@ -78,29 +80,31 @@ const NoteForm = ({ tags }: Props) => {
         <label htmlFor="tag">Tag</label>
         <select
           id="tag"
-          className={css.select}
           name="tag"
           defaultValue={draft?.tag}
-          onChange={handleChange}
+          onChange={handlechange}
+          className={css.select}
         >
-          {tags.map((tag) => (
-            <option key={tag} value={tag}>
-              {tag}
-            </option>
-          ))}
+          <option value="Todo">Todo</option>
+          <option value="Work">Work</option>
+          <option value="Personal">Personal</option>
+          <option value="Meeting">Meeting</option>
+          <option value="Shopping">Shopping</option>
         </select>
       </div>
 
       <div className={css.actions}>
-        <button type="submit" className={css.submitButton}>
-          Create
-        </button>
-        <button type="button" className={css.cancelButton} onClick={handleCancel}>
+        <button
+          type="button"
+          className={css.cancelButton}
+          onClick={handleCancel}
+        >
           Cancel
+        </button>
+        <button type="submit" className={css.submitButton}>
+          Create note
         </button>
       </div>
     </form>
   );
-};
-
-export default NoteForm;
+}

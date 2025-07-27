@@ -1,55 +1,69 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { register, RegisterRequest } from '@/lib/api/clientApi';
-import css from './SignUpPage.module.css'
+import { useRouter } from "next/navigation";
+import css from "./SignUpPage.module.css";
+import { useState } from "react";
+import { register } from "@/lib/api/clientApi";
+import { UserRequest } from "@/types/user";
+import { useAuthStore } from "@/lib/store/authStore";
 
 const SignUp = () => {
   const router = useRouter();
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const setUser = useAuthStore((state) => state.setUser);
 
-  const handleSubmit = async (formData: FormData) => {
+  const handlesubmit = async (formData: FormData) => {
     try {
-      const formValues = Object.fromEntries(formData) as RegisterRequest;
+      const formValues = Object.fromEntries(formData) as UserRequest;
+      // const registerData: UserRequest = {
+      //   email: formValues.email.toString(),
+      //   password: formValues.password.toString(),
+      // };
       const res = await register(formValues);
       if (res) {
-        router.push('/profile');
+        setUser(res);
+        router.push("/profile");
       } else {
-        setError('Invalid email or password');
+        setError("Invalid email or password");
       }
     } catch (error) {
-      console.log('error', error);
-      setError('Invalid email or password');
+      console.log("error", error);
+      setError("Invalid email or password");
     }
   };
-
   return (
     <main className={css.mainContent}>
-      <form action={handleSubmit} className={css.form}>
-        <h1 className={css.formTitle}>Sign up</h1>
-
-        <label className={css.formGroup}>
-          Username
-          <input type="text" name="userName" required className={css.input} />
-        </label>
-
-        <label className={css.formGroup}>
-          Email
-          <input type="email" name="email" required className={css.input} />
-        </label>
-
-        <label className={css.formGroup}>
-          Password
-          <input type="password" name="password" required className={css.input} />
-        </label>
-
-        <div className={css.actions}>
-          <button type="submit" className={css.submitButton}>Register</button>
+      <h1 className={css.formTitle}>Sign up</h1>
+      <form className={css.form} action={handlesubmit}>
+        <div className={css.formGroup}>
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            className={css.input}
+            required
+          />
         </div>
 
-        {error && <p className={css.error}>{error}</p>}
+        <div className={css.formGroup}>
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            className={css.input}
+            required
+          />
+        </div>
+
+        <div className={css.actions}>
+          <button type="submit" className={css.submitButton}>
+            Register
+          </button>
+        </div>
       </form>
+      {error && <p className={css.error}>{error}</p>}
     </main>
   );
 };

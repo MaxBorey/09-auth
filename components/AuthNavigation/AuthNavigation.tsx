@@ -1,56 +1,50 @@
-'use client';
+"use client";
+import { useAuthStore } from "@/lib/store/authStore";
+import css from "./AuthNavigation.module.css";
+import Link from "next/link";
+import { logout } from "@/lib/api/clientApi";
+import { useRouter } from "next/navigation";
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/lib/store/authStore';
-import { logout } from '@/lib/api/serverApi';
-import css from './AuthNavigation.module.css';
-
-const AuthNavigation = () => {
+export default function AuthNavigation() {
   const router = useRouter();
   const { isAuthenticated, user } = useAuthStore();
-  const clearIsAuthenticated = useAuthStore((state) => state.clearIsAuthenticated);
+  const clearIsAuthenticated = useAuthStore(
+    (state) => state.clearIsAuthenticated
+  );
 
   const handleLogout = async () => {
     await logout();
     clearIsAuthenticated();
-    router.push('/sign-in');
+    router.push("/sign-in");
   };
-
-  if (isAuthenticated) {
-    return (
-      <ul>
-        <li className={css.navigationItem}>
-          <p className={css.userEmail}>{user?.email}</p>
-        </li>
-        <li className={css.navigationItem}>
-          <button onClick={handleLogout} className={css.logoutButton}>
-            Logout
-          </button>
-        </li>
-        <li className={css.navigationItem}>
-          <Link href="/profile" prefetch={false} className={css.navigationLink}>
-            Profile
-          </Link>
-        </li>
-      </ul>
-    );
-  }
-
-  return (
-    <ul>
+  return isAuthenticated ? (
+    <>
       <li className={css.navigationItem}>
-        <Link href="/sign-in" prefetch={false} className={css.navigationLink}>
+        <Link href="/profile" className={css.navigationLink}>
+          Profile
+        </Link>
+      </li>
+
+      <li className={css.navigationItem}>
+        <p className={css.userEmail}>{user?.email}</p>
+        <button className={css.logoutButton} onClick={handleLogout}>
+          Logout
+        </button>
+      </li>
+    </>
+  ) : (
+    <>
+      <li className={css.navigationItem}>
+        <Link href="/sign-in" className={css.navigationLink}>
           Login
         </Link>
       </li>
+
       <li className={css.navigationItem}>
-        <Link href="/sign-up" prefetch={false} className={css.navigationLink}>
+        <Link href="/sign-up" className={css.navigationLink}>
           Sign up
         </Link>
       </li>
-    </ul>
+    </>
   );
-};
-
-export default AuthNavigation;
+}

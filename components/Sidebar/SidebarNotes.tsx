@@ -1,16 +1,21 @@
 import Link from "next/link";
 import css from "./SidebarNotes.module.css";
 
-interface SidebarNotesProps {
+type SideBarProps = {
   tags: string[];
-}
+};
 
-export default function SidebarNotes({ tags }: SidebarNotesProps) {
+const SidebarNotes = ({ tags }: SideBarProps) => {
   return (
     <ul className={css.menuList}>
       <li className={css.menuItem}>
+        <Link href="/notes/action/create" className={css.menuLink}>
+          Create Note
+        </Link>
+      </li>
+      <li className={css.menuItem}>
         <Link href={`/notes/filter/all`} className={css.menuLink}>
-          All notes
+          All Notes
         </Link>
       </li>
       {tags.map((tag) => (
@@ -22,4 +27,6 @@ export default function SidebarNotes({ tags }: SidebarNotesProps) {
       ))}
     </ul>
   );
-}
+};
+
+export default SidebarNotes;

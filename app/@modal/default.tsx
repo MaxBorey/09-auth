@@ -1,5 +1,2 @@
-const Default = () => {
-    return null;
-  };
-  
-  export default Default;
+const modal = () => null;
+export default modal;

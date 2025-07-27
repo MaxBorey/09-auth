@@ -1,50 +1,38 @@
-'use client'
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
-import css from './TagsMenu.module.css';
+import { TagName } from "@/types/note";
+import Link from "next/link";
+import { useState } from "react";
+import css from "./TagsMenu.module.css";
 
-type TagsMenuProps = {
-  tags: string[];
-};
-
-const TagsMenu = ({ tags }: TagsMenuProps) => {
+const tags: TagName[] = ["Work", "Personal", "Meeting", "Shopping", "Todo"];
+export default function TagsMenu() {
   const [isOpen, setIsOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-
   const toggle = () => setIsOpen(!isOpen);
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('click', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, [isOpen]);
-
   return (
-    <div ref={menuRef} className={css.menuContainer}>
-      <button onClick={toggle} className={css.menuButton}>
+    <div className={css.menuContainer}>
+      <button className={css.menuButton} onClick={toggle}>
         Notes ▾
       </button>
       {isOpen && (
         <ul className={css.menuList}>
           <li className={css.menuItem}>
-            <Link href={`/notes/filter/all`} className={css.menuLink} onClick={toggle}>
-              All notes
+            <Link
+              href={`/notes/filter/all`}
+              className={css.menuLink}
+              onClick={toggle}
+            >
+              All Notes
             </Link>
           </li>
           {tags.map((tag) => (
             <li key={tag} className={css.menuItem}>
-              <Link href={`/notes/filter/${tag}`} onClick={toggle} className={css.menuLink}>
+              <Link
+                href={`/notes/filter/${tag}`}
+                className={css.menuLink}
+                onClick={toggle}
+              >
                 {tag}
               </Link>
             </li>
@@ -53,6 +41,4 @@ const TagsMenu = ({ tags }: TagsMenuProps) => {
       )}
     </div>
   );
-};
-
-export default TagsMenu;
+}

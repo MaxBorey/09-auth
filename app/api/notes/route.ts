@@ -4,6 +4,17 @@ import { cookies } from "next/headers";
 
 export async function GET(request: NextRequest) {
   const cookieStore = await cookies();
+
+  console.log("CookieStore:", cookieStore);
+
+  // Чтобы вывести все куки по отдельности:
+  for (const cookie of cookieStore.getAll()) {
+    console.log(`Cookie name: ${cookie.name}, value: ${cookie.value}`);
+  }
+
+  // Если хочешь вывести куки из заголовка запроса напрямую:
+  console.log("Raw Cookie header:", request.headers.get("cookie"));
+
   const search = request.nextUrl.searchParams.get("search") ?? "";
   const page = Number(request.nextUrl.searchParams.get("page") ?? 1);
   const rawTag = request.nextUrl.searchParams.get("tag") ?? "";
@@ -20,8 +31,6 @@ export async function GET(request: NextRequest) {
       Cookie: cookieStore.toString(),
     },
   });
-
-
   if (data) {
     return NextResponse.json(data);
   }

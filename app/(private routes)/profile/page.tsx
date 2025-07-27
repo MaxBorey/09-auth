@@ -1,35 +1,43 @@
-import css from './ProfilePage.module.css'
-import Image from "next/image";
+import { getServerMe } from "@/lib/api/serverApi";
+import css from "./ProfilePage.module.css";
 import Link from "next/link";
+import Image from "next/image";
 import { Metadata } from "next";
-import { getMe } from '@/lib/api/serverApi';
 
 export const metadata: Metadata = {
-  title: "Your Profile — NoteHub",
-  description: "View and manage your profile information, settings, and notes.",
+  title: "User Profile",
+  description: "View User Profile",
   openGraph: {
-    title: "Your Profile — NoteHub",
-    description: "Customize your profile and explore your saved notes.",
-    siteName: "NoteHub",
+    title: "User Profile",
+    description: "View User Profile",
+    url: "https://09-auth-xi.vercel.app/profile",
     images: [
       {
-        url: "/op_profile.png",
+        url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
         width: 1200,
         height: 630,
-        alt: "User Profile Page on NoteHub",
+        alt: "notehub image",
       },
     ],
+    type: "article",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Your Profile — NoteHub",
-    description: "Access your profile and settings in NoteHub.",
-    images: ["/op_profile.png"],
+    title: "NoteHub",
+    description: "Take and organize notes easily with tags and instant search.",
+    images: [
+      {
+        url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
+        width: 1200,
+        height: 630,
+        alt: "notehub image",
+      },
+    ],
   },
 };
 
 const Profile = async () => {
-  const user = await getMe();
+  const { username, email, avatar } = await getServerMe();
   return (
     <main className={css.mainContent}>
       <div className={css.profileCard}>
@@ -41,7 +49,7 @@ const Profile = async () => {
         </div>
         <div className={css.avatarWrapper}>
           <Image
-            src={user.avatar}
+            src={avatar as string}
             alt="User Avatar"
             width={120}
             height={120}
@@ -49,8 +57,8 @@ const Profile = async () => {
           />
         </div>
         <div className={css.profileInfo}>
-          <p>Username: {user.username}</p>
-          <p>Email: {user.email}</p>
+          <p>Username: {username}</p>
+          <p>Email: {email}</p>
         </div>
       </div>
     </main>
@@ -58,3 +66,5 @@ const Profile = async () => {
 };
 
 export default Profile;
+
+// + metadata

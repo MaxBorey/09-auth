@@ -11,6 +11,7 @@ export default function NotePreview({ note }: NotePreviewProps) {
   function handleClose() {
     router.back();
   }
+
   return (
     <div className={css.container}>
       {note && (
@@ -18,12 +19,21 @@ export default function NotePreview({ note }: NotePreviewProps) {
           <div className={css.header}>
             <h2>{note.title}</h2>
             <button className={css.backBtn} onClick={handleClose}>
-            ✕
+              Back
             </button>
           </div>
-          <p className={css.tag}>{note.tag}</p>
           <p className={css.content}>{note.content}</p>
-          <p className={css.date}>{note.createdAt}</p>
+          {note.tag && <p className={css.tag}>Tag: {note.tag}</p>}
+          {note.createdAt && (
+            <p className={css.date}>
+              Created date: {new Date(note.createdAt).toLocaleDateString()}
+            </p>
+          )}
+          {note.updatedAt && (
+            <p className={css.date}>
+              Updated date: {new Date(note.updatedAt).toLocaleDateString()}
+            </p>
+          )}
         </div>
       )}
     </div>

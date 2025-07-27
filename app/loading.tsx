@@ -1,6 +1,7 @@
-const Loading = () => {
-    return <p>Loading, please wait...</p>
-  }
-  
-  export default Loading;
-  
+"use client";
+
+const loading = () => {
+  return <p>Loading, please wait...</p>;
+};
+
+export default loading;

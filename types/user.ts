@@ -1,15 +1,4 @@
-export interface User {
-  username: string;
-  email: string;
-}
-
-export interface LogInUser {
-  username: string;
-  email: string;
-  avatar: string;
-}
-
-export interface AuthRequest {
+export type UserRequest = {
   email: string;
   password: string;
-}
+};
