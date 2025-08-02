@@ -15,10 +15,6 @@ const SignUp = () => {
   const handlesubmit = async (formData: FormData) => {
     try {
       const formValues = Object.fromEntries(formData) as UserRequest;
-      // const registerData: UserRequest = {
-      //   email: formValues.email.toString(),
-      //   password: formValues.password.toString(),
-      // };
       const res = await register(formValues);
       if (res) {
         setUser(res);
