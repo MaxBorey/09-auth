@@ -8,6 +8,7 @@ const corsHeaders = {
   "Access-Control-Allow-Origin": "https://09-auth-peach.vercel.app", // або '*'
   "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Credentials": "true",
 };
 
 export async function OPTIONS() {
