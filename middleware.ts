@@ -7,6 +7,11 @@ const privateRoutes = ["/profile", "/notes"];
 const authRoutes = ["/sign-in", "/sign-up"];
 
 export async function middleware(request: NextRequest) {
+  // 🔥 Додано: пропустити preflight (CORS)
+  if (request.method === "OPTIONS") {
+    return NextResponse.next();
+  }
+
   const { pathname } = request.nextUrl;
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
