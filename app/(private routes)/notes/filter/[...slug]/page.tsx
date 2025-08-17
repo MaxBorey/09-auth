@@ -1,16 +1,16 @@
-import { getNotes } from '@/lib/api';
+import { getNotes } from '@/lib/api/clientApi';
 import NotesClient from './Notes.client';
-import { NoteTag } from '@/types/note';
+import { Tag } from '@/types/note';
 import type { Metadata } from 'next'
 
 type NotesByTagProps = {
   params: Promise<{ slug: string[] }>;
 };
 
-const validTags: NoteTag[] = ['Work', 'Personal', 'Meeting', 'Shopping', 'Todo'];
+const validTags: Tag[] = ['Work', 'Personal', 'Meeting', 'Shopping', 'Todo'];
 
-function isNoteTag(tag: string): tag is NoteTag {
-  return validTags.includes(tag as NoteTag);
+function isNoteTag(tag: string): tag is Tag {
+  return validTags.includes(tag as Tag);
 }
 
 export async function generateMetadata({ params }: NotesByTagProps): Promise<Metadata> {

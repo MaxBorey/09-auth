@@ -3,14 +3,14 @@
 import { useState } from 'react';
 import Link from 'next/link'; // додано для посилання
 import css from './Notes.module.css';
-import NoteList from '../../../../components/NoteList/NoteList';
-import Pagination from '../../../../components/Pagination/Pagination';
-import SearchBox from '../../../../components/SearchBox/SearchBox';
+import NoteList from '@/components/NoteList/NoteList';
+import Pagination from '@/components/Pagination/Pagination';
+import SearchBox from '@/components/SearchBox/SearchBox';
 import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
-import { getNotes } from '../../../../lib/api';
-import { Note } from '../../../../types/note';
-import { NotesApiResponse, NoteTag } from '@/types/note';
+import { getNotes } from '@/lib/api/clientApi';
+import { Note } from '@/types/note';
+import { NotesApiResponse, Tag } from '@/types/note';
 
 interface NotesClientProps {
   initialNotes: Note[];
@@ -18,7 +18,7 @@ interface NotesClientProps {
   initialPage: number;
   initialSearch: string;
   initialTotal: number;
-  tag?: NoteTag;
+  tag?: Tag;
 }
 
 export default function NotesClient({

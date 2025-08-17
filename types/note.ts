@@ -1,11 +1,12 @@
 export interface Note {
-  id: number;
+  id: string;
   title: string;
   content: string;
-  tag: string;
   createdAt: string;
   updatedAt: string;
-};
+  userId: string;
+  tag: Tag;
+}
 
 export interface ErrorProps {
   error: Error;
@@ -20,4 +21,4 @@ export interface NotesApiResponse {
   totalPages: number;
 }
 
-export type NoteTag = 'Work' | 'Personal' | 'Meeting' | 'Shopping' | 'Todo';
+export type Tag = 'Work' | 'Personal' | 'Meeting' | 'Shopping' | 'Todo';

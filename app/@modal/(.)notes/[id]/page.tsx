@@ -1,4 +1,4 @@
-import {fetchNoteById} from "@/lib/api";
+import {getNoteById} from "@/lib/api/clientApi";
 import {
   dehydrate,
   HydrationBoundary,
@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: NoteModalProps) {
   const noteId = Number(id);
   console.log("generateMetadata called for noteId:", noteId);
 
-  const note = await fetchNoteById(noteId);
+  const note = await getNoteById(noteId);
 
   return {
     title: note ? `Note: ${note.title}` : "Note not found",
@@ -47,7 +47,7 @@ export default async function NoteModal({ params }: NoteModalProps) {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["note", noteId],
-    queryFn: () => fetchNoteById(noteId),
+    queryFn: () => getNoteById(noteId),
   });
 
   return (
