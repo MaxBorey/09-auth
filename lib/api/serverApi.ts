@@ -25,7 +25,6 @@ export async function getNotesServer(
   return response.data;
 }
 
-
 export async function getNoteByIdServer(noteId: string): Promise<Note> {
   const cookieStore = await cookies();
   const response = await nextServer.get<Note>(`/notes/${noteId}`, {

@@ -1,4 +1,4 @@
-import {getNoteById} from "@/lib/api/clientApi";
+import {getNoteByIdServer} from "@/lib/api/serverApi";
 import {
   dehydrate,
   HydrationBoundary,
@@ -10,44 +10,12 @@ interface NoteModalProps {
   params: Promise<{ id: string }>;
 }
 
-export async function generateMetadata({ params }: NoteModalProps) {
+ const NotePreview = async ({ params }: NoteModalProps) => {
   const { id } = await params;
-  const noteId = Number(id);
-  console.log("generateMetadata called for noteId:", noteId);
-
-  const note = await getNoteById(noteId);
-
-  return {
-    title: note ? `Note: ${note.title}` : "Note not found",
-    description: note ? note.content.slice(0, 30) : "No content available",
-    openGraph: {
-      title: note ? `Note: ${note.title}` : "NoteHub - Your Notes App",
-      description: note
-        ? note.content.slice(0, 100)
-        : "Manage your notes efficiently with NoteHub",
-      url: `https://notehub.com/notes/${noteId}`,
-      siteName: "NoteHub",
-      images: [
-        {
-          url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
-          width: 1200,
-          height: 630,
-          alt: note ? `Note: ${note.title}` : "NoteHub - Your Notes App",
-        },
-      ],
-      type: "article",
-    },
-  };
-}
-
-
-export default async function NoteModal({ params }: NoteModalProps) {
-  const { id } = await params;
-  const noteId = +id;
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ["note", noteId],
-    queryFn: () => getNoteById(noteId),
+    queryKey: ["note", id],
+    queryFn: () => getNoteByIdServer(id),
   });
 
   return (
@@ -56,3 +24,5 @@ export default async function NoteModal({ params }: NoteModalProps) {
     </HydrationBoundary>
   );
 }
+
+export default NotePreview;

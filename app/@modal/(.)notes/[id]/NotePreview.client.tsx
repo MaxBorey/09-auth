@@ -1,56 +1,84 @@
 "use client";
 
 import Modal from "@/components/Modal/Modal";
-import NotePreview from "@/components/NotePreview/NotePreview";
 import { getNoteById } from "@/lib/api/clientApi";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
+import css from "./NotePreview.client.module.css";
+import { useCallback } from "react";
 
-export default function NotePreviewClient() {
+const NotePreviewClient = () => {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
-  const noteId = Number(id);
+
+  const onClose = useCallback(() => {
+    router.back();
+  }, [router]);
 
   const {
-    data,
+    data: note,
     isLoading,
     isError,
     error,
   } = useQuery({
-    queryKey: ["note", noteId],
-    queryFn: () => getNoteById(noteId),
+    queryKey: ["note", id] as const,
+    queryFn: () => getNoteById(id),
+    enabled: typeof id === "string" && id.length > 0, 
     refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    staleTime: 30_000,
+    placeholderData: keepPreviousData,
   });
-
-  function handleClose() {
-    router.back();
-  }
 
   if (isLoading) {
     return (
-      <Modal onClose={handleClose}>
-        <div style={{ padding: 20 }}>Loading note details...</div>
+      <Modal onClose={onClose}>
+        <div className={css.loading}>Завантаження нотатки…</div>
       </Modal>
     );
   }
 
   if (isError) {
     return (
-      <Modal onClose={handleClose}>
-        <div style={{ padding: 20, color: "red" }}>
-          Error loading note: {(error as Error).message}
+      <Modal onClose={onClose}>
+        <div className={css.error}>
+          Помилка: {(error as Error)?.message ?? "Невідома помилка"}
         </div>
       </Modal>
     );
   }
 
-  if (!data) {
-    return null;
+  if (!note) {
+    return (
+      <Modal onClose={onClose}>
+        <div className={css.empty}>Note not found</div>
+      </Modal>
+    );
   }
 
+  const date = new Date(note.createdAt);
+  const formattedDate = date.toLocaleString("uk-UA", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
   return (
-    <Modal onClose={handleClose}>
-      <NotePreview note={data} />
+    <Modal onClose={onClose}>
+      <div className={css.container}>
+        <p>{note.tag}</p>
+        <div className={css.item}>
+          <div className={css.header}>
+            <h2>{note.title}</h2>
+          </div>
+          <p className={css.content}>{note.content}</p>
+          <p className={css.date}>{formattedDate}</p>
+        </div>
+      </div>
     </Modal>
   );
-}
+};
+
+export default NotePreviewClient;

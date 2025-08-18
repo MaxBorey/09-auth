@@ -35,6 +35,11 @@ type CheckSessionRequest = {
   success: boolean;
 };
 
+export interface AuthUserData {
+  username: string;
+  email: string;
+}
+
 export async function getNotes(
   search = '',
   page = 1,
@@ -89,4 +94,9 @@ export const getMe = async () => {
 
 export const logout = async (): Promise<void> => {
   await nextServer.post('/auth/logout')
+};
+
+export const editUser = async (user: AuthUserData): Promise<User> => {
+  const responce = await nextServer.patch<User>("/users/me", user);
+  return responce.data;
 };
