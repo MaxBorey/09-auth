@@ -12,7 +12,6 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
   const router = useRouter();
 
   useEffect(() => {
-    // refresh викличе перезавантаження даних
     router.refresh();
     setLoading(false);
   }, [router]);

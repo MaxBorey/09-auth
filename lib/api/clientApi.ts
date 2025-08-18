@@ -36,23 +36,17 @@ type CheckSessionRequest = {
 };
 
 export async function getNotes(
-    search: string = '',
-    page: number = 1,
-    perPage: number = 12,
-    tag?: Tag,
+  search = '',
+  page = 1,
+  perPage = 12,
+  tag?: Tag,
 ): Promise<NotesApiResponse> {
-
-    
-  const params: ParamsType = {
-    page,
-    perPage,
-  };
-  
-  if (search) params.search = search;
-  if (tag && tag.trim() !== '') params.tag = tag;
+  const params: Record<string, string | number> = { page, perPage };
+  if (search.trim()) params.search = search.trim();
+  if (tag && tag.trim()) params.tag = tag;
 
   const response = await nextServer.get<NotesApiResponse>('/notes', { params });
-  return response.data;
+  return response.data; 
 }
 
 export async function getNoteById (id: number): Promise<Note> {

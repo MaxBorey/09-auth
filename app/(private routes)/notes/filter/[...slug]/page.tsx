@@ -1,7 +1,7 @@
-import { getNotes } from '@/lib/api/clientApi';
 import NotesClient from './Notes.client';
 import { Tag } from '@/types/note';
 import type { Metadata } from 'next'
+import { getNotesServer } from '@/lib/api/serverApi';
 
 type NotesByTagProps = {
   params: Promise<{ slug: string[] }>;
@@ -38,12 +38,12 @@ export async function generateMetadata({ params }: NotesByTagProps): Promise<Met
   };
 }
 
-export default async function NotesByTag({ params }: NotesByTagProps) {
+const NotesByTag = async({ params }: NotesByTagProps) => {
   const { slug } = await params;
   const rawTag = !slug || slug.length === 0 || slug[0] === 'all' ? undefined : slug[0];
   const tag = rawTag && isNoteTag(rawTag) ? rawTag : undefined;
 
-  const data = await getNotes('', 1, 12, tag);
+  const data = await getNotesServer('', 1, tag);
 
   return (
     <NotesClient
@@ -56,3 +56,5 @@ export default async function NotesByTag({ params }: NotesByTagProps) {
     />
   );
 }
+
+export default NotesByTag;
