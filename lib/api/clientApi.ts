@@ -59,7 +59,7 @@ export async function getNoteById (id: number | string): Promise<Note> {
   return response.data;
 };
 
-export async function deleteNote(id: number): Promise<Note> {
+export async function deleteNote(id: string): Promise<Note> {
   const response = await nextServer.delete<Note>(`/notes/${id}`);
   return response.data;
 }
