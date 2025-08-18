@@ -54,7 +54,7 @@ export async function getNotes(
   return response.data; 
 }
 
-export async function getNoteById (id: number): Promise<Note> {
+export async function getNoteById (id: number | string): Promise<Note> {
   const response = await nextServer.get<Note>(`/notes/${id}`);
   return response.data;
 };
