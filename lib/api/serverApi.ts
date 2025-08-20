@@ -1,8 +1,15 @@
 import { cookies } from "next/headers";
-import { ParamsType, User } from "./clientApi";
 import { Note, NotesApiResponse } from "../../types/note";
 import nextServer from "./api";
+import { User } from "@/types/user";
 
+export interface ParamsType  {
+  search?: string;
+  page?: number;
+  perPage?: number;
+  tag?: string;
+  sortBy?: string;
+}
 
 export async function getNotesServer(
   query: string,

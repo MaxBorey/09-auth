@@ -2,10 +2,11 @@
 import Image from "next/image";
 import css from "./EditProfile.module.css";
 import { useAuthStore } from "@/lib/store/authStore";
-import { AuthUserData, editUser } from "@/lib/api/clientApi";
+import { editUser } from "@/lib/api/clientApi";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { AuthUserData } from "@/types/user";
 
 const EditProfile = () => {
   const [error, setError] = useState("");

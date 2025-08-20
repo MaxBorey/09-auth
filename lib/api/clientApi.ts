@@ -1,30 +1,6 @@
-import { Note, NotesApiResponse, Tag } from "@/types/note";
+import { NewNoteData, Note, NotesApiResponse, Tag } from "@/types/note";
 import nextServer from "./api";
-
-export interface ParamsType  {
-  search?: string;
-  page?: number;
-  perPage?: number;
-  tag?: string;
-  sortBy?: string;
-    }
-
-export type NewNoteData = {
-    title: string;
-    content: string;
-    tag: string;
-};
-
-export type RegisterRequest = {
-    email: string;
-    password: string;
-};
-
-export interface User {
-  username: string;
-  email: string;
-  avatar?: string;
-}
+import { AuthUserData, RegisterRequest, User } from "@/types/user";
 
 export type LoginRequest = {
     email: string;
@@ -34,11 +10,6 @@ export type LoginRequest = {
 type CheckSessionRequest = {
   success: boolean;
 };
-
-export interface AuthUserData {
-  username: string;
-  email: string;
-}
 
 export async function getNotes(
   search = '',

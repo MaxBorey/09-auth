@@ -21,4 +21,10 @@ export interface NotesApiResponse {
   totalPages: number;
 }
 
+export type NewNoteData = {
+    title: string;
+    content: string;
+    tag: string;
+};
+
 export type Tag = 'Work' | 'Personal' | 'Meeting' | 'Shopping' | 'Todo';

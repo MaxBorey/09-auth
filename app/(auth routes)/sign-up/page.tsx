@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import css from "./SignUp.module.css";
 import { useRouter } from "next/navigation";
-import { getMe, register, RegisterRequest } from "@/lib/api/clientApi";
+import { getMe, register } from "@/lib/api/clientApi";
 import { useAuthStore } from "@/lib/store/authStore";
+import { RegisterRequest } from "@/types/user";
 
 const SignUpPage = () => {
   const router = useRouter();

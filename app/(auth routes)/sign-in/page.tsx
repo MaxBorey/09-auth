@@ -2,9 +2,10 @@
 
 import React, { useState } from "react";
 import css from "./SignInPage.module.css";
-import { getMe, login, RegisterRequest } from "@/lib/api/clientApi";
+import { getMe, login } from "@/lib/api/clientApi";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/authStore";
+import { RegisterRequest } from "@/types/user";
 
 const SignInPage = () => {
   const router = useRouter();
