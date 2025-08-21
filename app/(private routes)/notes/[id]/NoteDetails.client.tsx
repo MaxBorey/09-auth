@@ -3,10 +3,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { getNoteById } from "@/lib/api/clientApi";
 import css from "./NoteDetails.client.module.css";
+import { useParams } from "next/navigation";
 
-interface NoteDetailsClientProps {
-  noteId: number;
-}
 
 const getInvalidIdMessage = () => (
   <p className={css.content}>Invalid note ID</p>
@@ -20,22 +18,26 @@ const getErrorMessage = () => (
   <p className={css.content}>Something went wrong.</p>
 );
 
-const NoteDetailsClient = ({ noteId }: NoteDetailsClientProps) => {
+const NoteDetailsClient  = () => {
+  const { id } = useParams<{ id: string }>();
+
+  const validId = typeof id === "string" && id.trim().length > 0;
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ["note", noteId],
-    queryFn: () => getNoteById(noteId),
+    queryKey: ["note", id],
+    queryFn: () => getNoteById (String(id)),
+    enabled: validId,
     refetchOnMount: false,
-    enabled: !isNaN(noteId),
   });
 
-  if (isNaN(noteId)) return getInvalidIdMessage();
+  if (!validId) return getInvalidIdMessage();
   if (isLoading) return getLoadingMessage();
   if (error || !data) return getErrorMessage();
 
   const note = data;
   const formattedDate = note.updatedAt
-    ? `Updated at: ${note.updatedAt}`
-    : `Created at: ${note.createdAt}`;
+    ? `Updated at: ${new Date(note.updatedAt).toLocaleString()}`
+    : `Created at: ${new Date(note.createdAt).toLocaleString()}`;
 
   return (
     <div className={css.container}>
